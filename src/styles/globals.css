@@ -1,7 +1,71 @@
-body, html, #root {
-margin: 0; 
-  padding: 0; 
-  height: 100%; 
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   width: 100%;
   font-family: Arial, sans-serif;
 }
+
+/* checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #000000;
+  /* border color */
+  border-radius: 4px;
+  /* square or rounded */
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #0d4599;
+  border-color: #0d4599;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "✔";
+  font-size: 14px;
+  color: white;
+  font-weight: 600;
+  line-height: 14px;
+}
+
+/* info cloase button */
+.gm-ui-hover-effect {
+  background: #ffffff !important;
+  /* border: 1px solid #d3d3d3 !important; */
+  border-radius: 4px !important;
+  width: 22px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  /* box-shadow: 0 1px 4px rgba(0,0,0,0.25) !important; */
+  top: 6px !important;
+  right: 6px !important;
+  cursor: pointer !important;
+}
+
+/* Completely hide the default Google icon */
+.gm-ui-hover-effect > img,
+.gm-ui-hover-effect > svg,
+.gm-ui-hover-effect > span {
+  display: none !important;
+}
+
+/* Create custom black X */
+.gm-ui-hover-effect::after {
+  content: "✕"; /* Unicode X symbol */
+  color: #000000 !important;  /* pure black text */
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 14px !important;
+}
+
+

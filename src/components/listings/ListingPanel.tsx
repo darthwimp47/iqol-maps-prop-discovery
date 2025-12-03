@@ -1,4 +1,5 @@
 import { SortDropdown } from "./SortDropdown";
+import { ListingCard } from "./ListingCard";
 import { useMapStore } from "../../store/mapStore";
 import { useState, useMemo } from "react";
 
@@ -8,9 +9,7 @@ export function ListingPanel() {
     recommendedProperties,
     visibleProperties,
     selectedPropertyId,
-    setSelectedPropertyId,
     hoveredPropertyId,
-    setHoveredPropertyId,
     // map,
   } = useMapStore();
 
@@ -48,7 +47,7 @@ export function ListingPanel() {
   }, [recommendedProperties, visibleProperties]);
 
   return (
-    <div className="p-4 h-full bg-white border-l border-gray-200 overflow-y-auto z-150 shadow-xl">
+    <div className="p-4 h-full bg-transparent border-l border-gray-200 overflow-y-auto z-150 shadow-xl">
       {/* HEADER */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-3xl font-bold text-gray-900">Property For Sale</h3>
@@ -67,41 +66,13 @@ export function ListingPanel() {
           const isHover = hoveredPropertyId === p.id;
 
           return (
-            <div
+            <ListingCard
               key={p.id}
-              onMouseEnter={() => setHoveredPropertyId(p.id)}
-              onMouseLeave={() => setHoveredPropertyId(null)}
-              onClick={() => setSelectedPropertyId(p.id)}
-              className={`rounded-xl border cursor-pointer overflow-hidden shadow-sm transition-all ${
-                isActive
-                  ? "border-blue-600 shadow-md"
-                  : isHover
-                  ? "border-gray-900"
-                  : "border-gray-300"
-              }`}
-            >
-              {/* IMAGE */}
-              <div className="w-full h-36 bg-gray-300">
-                <img
-                  src={p.image ?? "https://via.placeholder.com/300x200?text=Property"}
-                  alt={p.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* CONTENT */}
-              <div className="p-3 space-y-1">
-                <div className="text-lg font-bold text-gray-800">
-                  ₹{(p.price / 10000000).toFixed(1)} Cr
-                </div>
-
-                <div className="text-sm text-gray-600">
-                  {p.configuration} • {p.propertyType}
-                </div>
-
-                <div className="text-sm text-gray-500 truncate">{p.micromarket}</div>
-              </div>
-            </div>
+              property={p}
+              isRecommended={false}
+              isActive={isActive}
+              isHovered={isHover}
+            />
           );
         })}
 
@@ -113,30 +84,12 @@ export function ListingPanel() {
             </h3>
 
             {visibleRecommended.map((p) => (
-              <div
+              <ListingCard
                 key={`rec-${p.id}`}
-                onMouseEnter={() => setHoveredPropertyId(p.id)}
-                onMouseLeave={() => setHoveredPropertyId(null)}
-                onClick={() => setSelectedPropertyId(p.id)}
-                className={`rounded-xl border cursor-pointer overflow-hidden shadow-sm transition-all bg-amber-50 ${
-                  selectedPropertyId === p.id
-                    ? "border-amber-600 shadow-md"
-                    : "border-amber-300"
-                }`}
-              >
-                <div className="w-full h-36 bg-gray-300" />
-
-                <div className="p-3 space-y-1">
-                  <div className="text-lg font-bold text-amber-700">
-                    ₹{(p.price / 10000000).toFixed(1)} Cr
-                  </div>
-
-                  <div className="text-sm text-gray-700">{p.configuration}</div>
-                  <div className="text-sm text-gray-500">{p.micromarket}</div>
-
-                  <span className="text-xs font-semibold text-amber-700">Recommended</span>
-                </div>
-              </div>
+                property={p}
+                isRecommended={true}
+                isActive={selectedPropertyId === p.id}
+              />
             ))}
           </>
         )}
@@ -144,3 +97,4 @@ export function ListingPanel() {
     </div>
   );
 }
+

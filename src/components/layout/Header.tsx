@@ -4,9 +4,9 @@ export default function Header() {
       style={{
         width: "100%",
         height: "70px",
-        backgroundColor: "#f8f8f8",
+        backgroundColor: "#ffffffff",
         color: "#333",
-        borderBottom: "1px solid #e0e0e0",
+        borderBottom: "1px solid rgb(204, 204, 204)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -15,10 +15,9 @@ export default function Header() {
         fontSize: "30px",
         position: "relative",
         zIndex: 10,
-        boxShadow: "0 3px 3px rgba(0, 0, 0, 0.1)", // shadow below
       }}
     >
-      IQOL MAPS
+      IQOL MAPS - PropDiscovery
     </header>
   );
 }

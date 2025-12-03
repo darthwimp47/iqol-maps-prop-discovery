@@ -40,12 +40,13 @@ export function FiltersBar() {
         alignItems: "center",
         gap: "12px",
         padding: "10px 18px",
-        borderBottom: "1px solid #e5e5e5",
+        borderBottom: "1px solid rgb(204, 204, 204)",
         background: "#ffffff",
         height: "52px",
         position: "relative",
         justifyContent: "space-between",
         width: "100%",
+        zIndex: 999,
       }}
     >
       <SearchBar />

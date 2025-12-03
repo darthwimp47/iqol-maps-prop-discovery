@@ -34,13 +34,14 @@ export function SortDropdown({ selected, onSelect }: SortDropdownProps) {
     <div ref={sortRef} className="relative">
       {/* Button */}
       <div
-        className="text-base font-medium text-blue-600 cursor-pointer flex items-center gap-1"
+        className="text-sm font-semibold underline text-[rgb(13,69,153)] cursor-pointer flex items-center gap-1"
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen((prev) => !prev);
         }}
       >
-        Sort: {selected} <span>▼</span>
+        Sort: {selected} 
+        {/* <span>▼</span> */}
       </div>
 
       {isOpen && (

@@ -1,11 +1,15 @@
 import { GoogleMap, Marker, OverlayView } from "@react-google-maps/api";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useMapStore } from "../../store/mapStore";
 import { useMapsApi } from "../../context/MapsContext";
 import { PropertyPopup } from "./PropertyPopup";
 import { mockProperties } from "../../mock/properties.mock";
 import { DrawTool } from "./DrawTool";
 import { DrawOverlay } from "./DrawOverlay";
+import { LayersControl } from "./LayersControl";
+import { MapLayersRenderer } from "./MapLayersRenderer";
+import { MapLegend } from "./MapLegend";
+import { useLayersStore } from "../../store/layersStore";
 
 const containerStyle = {
   width: "100%",
@@ -16,6 +20,8 @@ const bangaloreCenter = { lat: 12.9716, lng: 77.5946 };
 
 export function GoogleMapContainer() {
   const { isLoaded, loadError } = useMapsApi();
+  const [legendOpen, setLegendOpen] = useState(false);
+  const { visibleLayers } = useLayersStore();
 
   const {
     map,
@@ -31,6 +37,28 @@ export function GoogleMapContainer() {
     filteredProperties,
     recommendedProperties,
   } = useMapStore();
+
+  // Derive infrastructure filters from visibleLayers
+  const infrastructureFilters = {
+    metro: Boolean(visibleLayers["metro_lines"]),
+    suburbanRailway: Boolean(visibleLayers["suburb_railway"]),
+    water: Boolean(visibleLayers["water_lines"]),
+    sewage: Boolean(visibleLayers["sewage_lines"]),
+    majorRoads: Boolean(visibleLayers["major_roads"]),
+  };
+
+  // Derive planning filters (CDP maps)
+  const planningFilters = {
+    bda_2015_compiled: Boolean(visibleLayers["bda_2015_compiled"]),
+  };
+
+  // Auto-open legend when any layer is checked
+  useEffect(() => {
+    const hasAnyLayerVisible = Object.values(infrastructureFilters).some(Boolean) || Object.values(planningFilters).some(Boolean);
+    if (hasAnyLayerVisible) {
+      setLegendOpen(true);
+    }
+  }, [visibleLayers]);
 
   // Compute marker dataset correctly
   const baseProperties =
@@ -98,6 +126,7 @@ export function GoogleMapContainer() {
         fullscreenControl: false,
         mapTypeControl: false,
         streetViewControl: false,
+        mapId: import.meta.env.VITE_GOOGLE_MAP_ID,
       }}
     >
       {/* POPUP */}
@@ -135,20 +164,28 @@ export function GoogleMapContainer() {
             }}
             icon={{
               url: isRecommended
-                ? "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                ? "src/assets/recommendedPin.png"
                 : isActive || isHover
-                  ? "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
-                  : "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+                  ? "src/assets/hoverPin.png"
+                  : "src/assets/defaultPin.png",
               scaledSize: new google.maps.Size(
-                isRecommended ? 55 : isActive || isHover ? 50 : 40,
-                isRecommended ? 55 : isActive || isHover ? 50 : 40
+                isRecommended ? 40 : isActive || isHover ? 40 : 30,
+                isRecommended ? 40 : isActive || isHover ? 40 : 30
               ),
             }}
           />
         );
       })}
+      <MapLayersRenderer />
       <DrawOverlay />
       <DrawTool />
+      <LayersControl />
+      <MapLegend
+        visible={legendOpen}
+        onClose={() => setLegendOpen(false)}
+        infrastructureFilters={infrastructureFilters}
+        planningFilters={planningFilters}
+      />
     </GoogleMap>
   );
 }
