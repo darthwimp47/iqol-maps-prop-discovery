@@ -20,7 +20,8 @@ const bangaloreCenter = { lat: 12.9716, lng: 77.5946 };
 
 export function GoogleMapContainer() {
   const { isLoaded, loadError } = useMapsApi();
-  const [legendOpen, setLegendOpen] = useState(false);
+  const [legendVisible, setLegendVisible] = useState(false);
+  const [legendMinimized, setLegendMinimized] = useState(false);
   const { visibleLayers } = useLayersStore();
 
   const {
@@ -54,9 +55,13 @@ export function GoogleMapContainer() {
 
   // Auto-open legend when any layer is checked
   useEffect(() => {
-    const hasAnyLayerVisible = Object.values(infrastructureFilters).some(Boolean) || Object.values(planningFilters).some(Boolean);
+    const hasAnyLayerVisible =
+      Object.values(infrastructureFilters).some(Boolean) ||
+      Object.values(planningFilters).some(Boolean);
+
     if (hasAnyLayerVisible) {
-      setLegendOpen(true);
+      setLegendVisible(true);
+      setLegendMinimized(false);   // expand automatically when new layer toggled
     }
   }, [visibleLayers]);
 
@@ -181,8 +186,10 @@ export function GoogleMapContainer() {
       <DrawTool />
       <LayersControl />
       <MapLegend
-        visible={legendOpen}
-        onClose={() => setLegendOpen(false)}
+        visible={legendVisible}
+        onClose={() => setLegendVisible(false)}
+        minimized={legendMinimized}
+        onToggle={() => setLegendMinimized(!legendMinimized)}
         infrastructureFilters={infrastructureFilters}
         planningFilters={planningFilters}
       />

@@ -12,6 +12,7 @@ import { StatusDropdown } from "../../components/filters/StatusDropdown";
 import { useFilterStore } from "../../store/filtersStore";
 import { MapsProvider } from "../../context/MapsContext";
 
+
 export function PropertyDiscoveryPage() {
   const {
     isPriceDropdownOpen,
