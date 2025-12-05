@@ -7,54 +7,39 @@ export function DrawOverlay() {
 
   return (
     <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "60px",
-        background: "rgba(0,0,0,0.55)",
-        color: "white",
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 15px",
-        fontSize: "16px",
-      }}
+      className="
+        absolute top-0 left-0 w-full h-[60px]
+        bg-[rgba(0,0,0,0.55)] text-white
+        z-[9999] flex items-center justify-between
+        px-[15px] text-[16px]
+      "
     >
       <span>Draw a shape around the region(s) you would like to live in</span>
 
-      <div style={{ display: "flex" }}>
+      <div className="flex">
         <button
           onClick={resetDrawArea}
-          style={{
-            background: "transparent",
-            border: "none",
-            color: "white",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
+          className="
+            bg-transparent border-none text-white
+            text-[16px] cursor-pointer
+          "
         >
           Cancel
         </button>
 
-        {/* <button
+        {/*
+        <button
           onClick={applyDrawArea}
           disabled={count === 0}
-          style={{
-            background: "transparent",
-            fontSize: "16px",
-            borderRadius: "4px",
-            border: "none",
-            color: "white",
-            padding: "6px 14px",
-            fontWeight: 400,
-            cursor: count === 0 ? "not-allowed" : "pointer",
-          }}
+          className="
+            bg-transparent text-[16px] rounded-[4px]
+            border-none text-white px-[14px] py-[6px] font-normal
+            disabled:cursor-not-allowed cursor-pointer
+          "
         >
           Apply
-        </button> */}
+        </button>
+        */}
       </div>
     </div>
   );

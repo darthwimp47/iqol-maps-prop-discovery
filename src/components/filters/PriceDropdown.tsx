@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFilterStore } from "../../store/filtersStore";
 import { useMapStore } from "../../store/mapStore";
 
@@ -18,19 +18,14 @@ export function PriceDropdown() {
   const [localMax, setLocalMax] = useState(priceMax ?? "");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click, but ignore clicks inside the FiltersBar
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node | null;
       if (!target) return;
 
-      // If click is inside the dropdown, do nothing
       if (dropdownRef.current && dropdownRef.current.contains(target)) return;
 
-      // If click happened inside the FiltersBar (the filter buttons), ignore it
-      if ((target as Element).closest && (target as Element).closest('[data-filter-bar]')) {
-        return;
-      }
+      if ((target as Element).closest && (target as Element).closest("[data-filter-bar]")) return;
 
       closePriceDropdown();
     }
@@ -52,33 +47,28 @@ export function PriceDropdown() {
     <div
       ref={dropdownRef}
       onClick={(e) => e.stopPropagation()}
-      style={{
-        position: "absolute",
-        top: -47,
-        right: "32.7%",
-        transform: "translateY(45px)",
-        width: "250px",
-        height: "auto",
-        padding: "18px",
-        background: "white",
-        border: "1px solid #dcdcdc",
-        borderRadius: "10px",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.12)",
-        zIndex: 150,
-        color: "#333",
-      }}
+      className="
+        absolute top-[-47px] right-[32.7%] translate-y-[45px]
+        w-[250px] h-auto p-[18px]
+        bg-white border border-[#dcdcdc] rounded-[10px]
+        shadow-[0_4px_10px_rgba(0,0,0,0.12)]
+        z-[150] text-[#333]
+      "
     >
-      <h4 style={{ margin: "0 0 12px", fontSize: "15px", fontWeight: 600 }}>
-        Price Range
-      </h4>
+      <h4 className="mb-3 text-[15px] font-semibold">Price Range</h4>
 
-      <div style={{ display: "flex", gap: "10px", marginBottom: "14px" }}>
+      <div className="flex gap-[10px] mb-[14px]">
         <input
           type="number"
           placeholder="Min"
           value={localMin}
           onChange={(e) => setLocalMin(e.target.value)}
-          style={inputBox}
+          className="
+            px-[10px] py-[10px] w-[100px]
+            border border-[#ccc] rounded-[6px]
+            bg-[#fafafa] text-[14px] text-[#333]
+            outline-none
+          "
         />
 
         <input
@@ -86,12 +76,17 @@ export function PriceDropdown() {
           placeholder="Max"
           value={localMax}
           onChange={(e) => setLocalMax(e.target.value)}
-          style={inputBox}
+          className="
+            px-[10px] py-[10px] w-[100px]
+            border border-[#ccc] rounded-[6px]
+            bg-[#fafafa] text-[14px] text-[#333]
+            outline-none
+          "
         />
       </div>
 
-      <div style={{ marginBottom: "14px" }}>
-        <label style={checkboxStyle}>
+      <div className="mb-[14px]">
+        <label className="flex items-center gap-[6px] text-[14px] mb-[6px]">
           <input
             type="checkbox"
             checked={strictBudget}
@@ -100,7 +95,7 @@ export function PriceDropdown() {
           Strict — Show only within range
         </label>
 
-        <label style={checkboxStyle}>
+        <label className="flex items-center gap-[6px] text-[14px] mb-[6px]">
           <input
             type="checkbox"
             checked={flexibleBudget}
@@ -110,40 +105,18 @@ export function PriceDropdown() {
         </label>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <button onClick={applyFilters} style={applyBtn}>
+      <div className="flex justify-end">
+        <button
+          onClick={applyFilters}
+          className="
+            w-full px-[18px] py-[8px] rounded-[6px]
+            bg-[#111] text-white font-semibold
+            cursor-pointer border-none
+          "
+        >
           Apply
         </button>
       </div>
     </div>
   );
 }
-
-const inputBox: React.CSSProperties = {
-  padding: "10px",
-  border: "1px solid #ccc",
-  background: "#fafafa",
-  borderRadius: "6px",
-  fontSize: "14px",
-  color: "#333",
-  width: "100px",
-};
-
-const checkboxStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "6px",
-  fontSize: "14px",
-  marginBottom: "6px",
-};
-
-const applyBtn: React.CSSProperties = {
-  padding: "8px 18px",
-  borderRadius: "6px",
-  background: "#111",
-  color: "white",
-  cursor: "pointer",
-  fontWeight: 600,
-  border: "none",
-  width: "100%",
-};

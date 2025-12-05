@@ -26,7 +26,6 @@ export function DrawTool() {
     startListenerRef.current = map.addListener("mousedown", (e: google.maps.MapMouseEvent) => {
       if (!e.latLng) return;
 
-      // store snapshot before modifying anything
       setPreDrawSnapshot(
         useMapStore.getState().visibleProperties,
         useMapStore.getState().filteredProperties
@@ -117,26 +116,24 @@ export function DrawTool() {
   }, [drawingMode]);
 
   return (
-    <div style={{ position: "absolute", top: 10, right: 10, zIndex: 100 }}>
+    <div className="absolute top-[10px] right-[10px] z-[100]">
       {!drawingMode && !drawnPolygon && (
-        <button style={btn} onClick={beginDraw}>Draw</button>
+        <button
+          onClick={beginDraw}
+          className="px-3 py-1.5 bg-white text-black font-semibold border border-black rounded-[3px] cursor-pointer"
+        >
+          Draw
+        </button>
       )}
 
       {!drawingMode && drawnPolygon && (
-        <button style={{ ...btn, background: "#ffffffff" }} onClick={clearPolygon}>
+        <button
+          onClick={clearPolygon}
+          className="px-3 py-1.5 bg-white text-black font-semibold border border-black rounded-[3px] cursor-pointer"
+        >
           Remove Boundary
         </button>
       )}
     </div>
   );
 }
-
-const btn: React.CSSProperties = {
-  padding: "6px 12px",
-  background: "white",
-  color: "black",
-  borderRadius: "3px",
-  cursor: "pointer",
-  fontWeight: 600,
-  border: "black 1px solid",
-};

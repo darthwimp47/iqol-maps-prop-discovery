@@ -11,7 +11,7 @@ import { StatusDropdown } from "../../components/filters/StatusDropdown";
 
 import { useFilterStore } from "../../store/filtersStore";
 import { MapsProvider } from "../../context/MapsContext";
-
+import { useEffect, useState } from "react";
 
 export function PropertyDiscoveryPage() {
   const {
@@ -44,37 +44,38 @@ function PropertyDiscoveryPageContent({
   isPropertyTypeDropdownOpen: boolean;
   isStatusDropdownOpen: boolean;
 }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
-      <Header />
-      <FiltersBar />
+  const [activeTab, setActiveTab] = useState<"map" | "list">("map");
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const pointer = 
+    isStatusDropdownOpen ||
+    isPriceDropdownOpen ||
+    isConfigDropdownOpen ||
+    isPropertyTypeDropdownOpen
+      ? "auto"
+      : "none";
+
+  return (
+    <div className="flex flex-col h-screen w-screen overflow-hidden relative">
+      <Header isMobile={isMobile} />
+      <FiltersBar isMobile={isMobile} />
+
+      {/* DROPDOWN WRAPPER */}
       <div
-        style={{
-          position: "absolute",
-          top: "131px",
-          left: 0,
-          right: 0,
-          width: "100%",
-          height: "auto",
-          zIndex: 150,
-          pointerEvents:
-            isStatusDropdownOpen ||
-            isPriceDropdownOpen ||
-            isConfigDropdownOpen ||
-            isPropertyTypeDropdownOpen
-              ? "auto"
-              : "none",
-        }}
+        className="
+          absolute
+          top-[131px] left-0 right-0
+          w-full h-auto z-[150]
+        "
+        style={{ pointerEvents: pointer }}
       >
         {isStatusDropdownOpen && <StatusDropdown />}
         {isPriceDropdownOpen && <PriceDropdown />}
@@ -82,9 +83,17 @@ function PropertyDiscoveryPageContent({
         {isPropertyTypeDropdownOpen && <PropertyTypeDropdown />}
       </div>
 
-      <div style={{ height: "calc(100vh - 131px)", overflow: "hidden" }}>
-        <MainLayout left={<MapPanel />} right={<ListingPanel />} />
+      {/* MAIN CONTENT */}
+      <div className="flex-1 overflow-hidden">
+        <MainLayout
+          left={<MapPanel />}
+          right={<ListingPanel />}
+          activeTab={activeTab}
+          isMobile={isMobile}
+          setActiveTab={setActiveTab}
+        />
       </div>
+      
     </div>
   );
 }

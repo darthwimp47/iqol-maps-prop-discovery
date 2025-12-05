@@ -1,21 +1,15 @@
-export default function Header() {
+export default function Header({ isMobile }: { isMobile: boolean }) {
+  if (isMobile) return null; // hide header on mobile
+
   return (
     <header
-      style={{
-        width: "100%",
-        height: "70px",
-        backgroundColor: "#ffffffff",
-        color: "#333",
-        borderBottom: "1px solid rgb(204, 204, 204)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "0 20px",
-        fontWeight: 600,
-        fontSize: "30px",
-        position: "relative",
-        zIndex: 10,
-      }}
+      className="
+        w-full h-[70px] bg-white text-[#333]
+        border-b border-[#cccccc]
+        flex items-center justify-center
+        px-[20px] font-semibold text-[30px]
+        relative z-[10]
+      "
     >
       IQOL MAPS - PropDiscovery
     </header>

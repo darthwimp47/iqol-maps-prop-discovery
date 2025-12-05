@@ -2,9 +2,9 @@ import { useRef, useEffect, useState } from "react";
 import { useMapsApi } from "../../context/MapsContext";
 import { useMapStore } from "../../store/mapStore";
 
-export function SearchBar() {
+export function SearchBar({ isMobile }: { isMobile: boolean }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { setCenter, setZoom, map } = useMapStore(); // map is needed
+  const { setCenter, setZoom, map } = useMapStore();
   const { isLoaded } = useMapsApi();
   const [value, setValue] = useState("");
 
@@ -33,13 +33,11 @@ export function SearchBar() {
     };
   }, [isLoaded, map, setCenter, setZoom]);
 
-  // Clear search input
   const handleClear = () => {
     setValue("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
-  // Manual trigger of search (Enter / button click)
   const triggerSearch = () => {
     const enterEvent = new KeyboardEvent("keydown", { key: "Enter", code: "Enter" });
     inputRef.current?.dispatchEvent(enterEvent);
@@ -47,12 +45,10 @@ export function SearchBar() {
 
   return (
     <div
-      style={{
-        position: "relative",
-        width: "600px",
-        display: "flex",
-        alignItems: "center",
-      }}
+      className={`
+        relative flex items-center
+        ${isMobile ? "w-full mb-2 mt-2" : "w-[500px]"}
+      `}
     >
       <input
         ref={inputRef}
@@ -61,60 +57,33 @@ export function SearchBar() {
         disabled={!isLoaded}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        style={{
-          width: "100%",
-          height: "40px",
-          padding: "0 80px 0 14px",
-          borderRadius: "10px",
-          border: "1px solid #ccc",
-          fontSize: "15px",
-          background: "#fff",
-          outline: "none",
-          color: "#000",
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") triggerSearch();
-        }}
+        onKeyDown={(e) => e.key === "Enter" && triggerSearch()}
+        className={`
+          w-full outline-none text-black bg-white border border-[#ccc] rounded-[10px]
+          ${isMobile ? "h-[46px] text-[16px] pr-[70px] pl-[14px]" : "h-[40px] text-[15px] pr-[80px] pl-[14px]"}
+        `}
       />
 
-      {/* Clear Button (X) */}
       {value && (
         <button
           onClick={handleClear}
-          style={{
-            position: "absolute",
-            right: "45px", 
-            background: "#000000ff", 
-            color: "white", 
-            borderRadius: "50%", // Perfect circle
-            width: "18px", // Slightly smaller, more refined size
-            height: "18px",
-            fontSize: "12px", // Size of the '✕'
-            lineHeight: "19px", // Adjust line height to vertically center the '✕' character
-            fontWeight: "bold", 
-            border: "none",
-            cursor: "pointer",
-            padding: 0, // Remove browser default padding
-            textAlign: "center", 
-          }}
+          className={`
+            absolute flex justify-center items-center
+            bg-black text-white rounded-full font-bold
+            w-[18px] h-[18px] text-[12px] leading-[19px]
+            ${isMobile ? "right-[40px]" : "right-[45px]"}
+          `}
         >
           ✕
         </button>
       )}
 
-      {/* Search Button*/}
       <button
         onClick={triggerSearch}
-        style={{
-          position: "absolute",
-          right: "10px",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          fontSize: "18px",
-          color: "#000",
-          padding: "6px",
-        }}
+        className={`
+          absolute right-[10px] bg-transparent border-none cursor-pointer
+          ${isMobile ? "text-[20px]" : "text-[18px]"}
+        `}
       >
         🔍
       </button>

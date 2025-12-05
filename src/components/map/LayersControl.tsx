@@ -25,37 +25,17 @@ export function LayersControl() {
   }, []);
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: "25px",
-        right: "68px",
-        zIndex: 999,
-      }}
-    >
+    <div className="absolute bottom-[25px] right-[68px] z-[999]">
       {open && (
         <div
           ref={dropdownRef}
-          style={{
-            position: "absolute",
-            bottom: "50px",
-            right: 0,
-            width: "260px",
-            background: "white",
-            padding: "16px",
-            border: "1px solid #ddd",
-            borderRadius: "10px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-          }}
+          className="
+            absolute bottom-[50px] right-0 w-[260px] p-4 
+            bg-white border border-[#ddd] rounded-[10px]
+            shadow-[0_4px_12px_rgba(0,0,0,0.15)]
+          "
         >
-          <h4
-            style={{
-              margin: "0 0 14px 0",
-              fontSize: "15px",
-              fontWeight: 600,
-              color: "#333",
-            }}
-          >
+          <h4 className="mb-[14px] text-[15px] font-semibold text-[#333]">
             Map Layers
           </h4>
 
@@ -78,16 +58,10 @@ export function LayersControl() {
       <button
         ref={buttonRef}
         onClick={() => setOpen((p) => !p)}
-        style={{
-          padding: "8px 14px",
-          border: "1px solid #ccc",
-          borderRadius: "6px",
-          background: "#fff",
-          cursor: "pointer",
-          fontWeight: 600,
-          fontSize: "14px",
-          color: "#333",
-        }}
+        className="
+          px-[14px] py-[8px] text-[14px] font-semibold text-[#333]
+          bg-white border border-[#ccc] rounded-[6px] cursor-pointer
+        "
       >
         Layers
       </button>
