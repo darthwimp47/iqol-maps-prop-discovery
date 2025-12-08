@@ -118,4 +118,149 @@ export const mockProperties = [
     image: sampleImage,
     status: "Under Construction",
   },
+  // [{
+  //   "id": "PRM_KA_RERA_1250_301_PR_010422_004807",
+  //   "approvedPlanNumber": "STRRPA/TP-4/LAO/10/2019-20",
+  //   "address": "8/1,8/2,8/3,9/3 and 9/4 of Tammashetthalli Village, Kasaba Hobli , Doddaballapura zone , Doddaballapura , Bengaluru Rural, Karnataka - 561203",
+  //   "localAuthority": "BASHETTIHALLI TOWN PLANNING PANCHAYAT",
+  //   "waterSource": [
+  //     "Borewell",
+  //     "Corporation"
+  //   ],
+  //   "projectType": "Plotted Development",
+  //   "complaints": {
+  //     "complaintsOnPromoter": [],
+  //     "complaintsOnProject": []
+  //   },
+  //   "planApprovalDate": "30-06-2020",
+  //   "long": "77.55927225354641",
+  //   "handoverDate": "31-12-2022",
+  //   "reraId": "PRM/KA/RERA/1250/301/PR/010422/004807",
+  //   "acknowledgementNumber": "ACK/KA/RERA/1250/301/PR/051121/005453",
+  //   "litigationStatus": "NO",
+  //   "zone": "Yelahanka",
+  //   "district": "Bengaluru Urban",
+  //   "projectStartDate": "01-04-2021",
+  //   "approvingAuthority": "BBMP - Bruhat Bengaluru Mahanagara Palike",
+  //   "projectDescription": "projectType",
+  //   "promoterName": "Svarna Properties",
+  //   "affidavitLink": "https://rera.karnataka.gov.in/download_jc?DOC_ID=4QJnqT3TSrBAsYSrTL8t8Q%3D%3D",
+  //   "projectId": "PRM_KA_RERA_1250_301_PR_010422_004807",
+  //   "lat": "13.297227503098807",
+  //   "pinCode": 560064,
+  //   "projectName": "SVARNA SAMRUDDHI PARADISE",
+  //   "masterPlan": {},
+  //   "apartments": [],
+  //   "villas": [],
+  //   "assetType": "plot",
+  //   "projectStatus": "completed",
+  //   "lastModified": 1758794410
+  // },
+  // {
+  //   "id": "PRM_KA_RERA_1250_301_PR_041023_006302",
+  //   "approvedPlanNumber": "DPA/TP/LAO/05/2022-23",
+  //   "address": "Sy no 1/1A, 1/2, 2/10, 2/11, 2/12 Acharalahalli and 14/2, 14/6 , Machagondanahalli, Tubagere Hobli, , Doddaballapura , Bengaluru Rural, Karnataka - 561205",
+  //   "localAuthority": "Heggadihalli Gramapanchayath",
+  //   "waterSource": [
+  //     "Corporation"
+  //   ],
+  //   "projectType": "Plotted Development",
+  //   "complaints": {
+  //     "complaintsOnPromoter": [],
+  //     "complaintsOnProject": []
+  //   },
+  //   "planApprovalDate": "31-05-2023",
+  //   "long": "77.6491729",
+  //   "handoverDate": "31-07-2025",
+  //   "reraId": "PRM/KA/RERA/1250/301/PR/041023/006302",
+  //   "acknowledgementNumber": "ACK/KA/RERA/1250/301/PR/250723/007316",
+  //   "litigationStatus": "NO",
+  //   "zone": "Bengaluru South",
+  //   "district": "Bengaluru Urban",
+  //   "projectStartDate": "21-07-2023",
+  //   "approvingAuthority": "BMRDA - Bangalore Metropolitan Region Development Authority",
+  //   "projectDescription": "projectType",
+  //   "promoterName": "MYTHREYI DEVELOPERS",
+  //   "affidavitLink": "https://rera.karnataka.gov.in/download_jc?DOC_ID=en%2BYFJvkPYxONDsmIBLHUQ%3D%3D",
+  //   "projectId": "PRM_KA_RERA_1250_301_PR_041023_006302",
+  //   "lat": "13.3538493",
+  //   "pinCode": 560011,
+  //   "projectName": "MYTHREYI AETHER",
+  //   "villas": [],
+  //   "apartments": [
+  //     {
+  //       "id": "apartment_1753419848849",
+  //       "aptType": "simplex",
+  //       "typology": "",
+  //       "superBuiltUpArea": "",
+  //       "carpetArea": 0,
+  //       "currentPricePerSqft": "",
+  //       "totalPrice": 0,
+  //       "floorPlan": ""
+  //     }
+  //   ],
+  //   "masterPlan": {},
+  //   "assetType": "plot",
+  //   "projectStatus": "completed",
+  //   "lastModified": 1758794410
+  // },
+  // {
+  //   "id": "PRM_KA_RERA_1250_301_PR_050924_007000",
+  //   "approvedPlanNumber": "DPA/TP/LAO/24/2023-24",
+  //   "address": "Sy.Nos.158/1, 158/2, 159/1, 159/2, 198, 199, 207, 209, 210, 211, 212, 213, 214, 215, 216, 218, 219, 220, 221 OF VADDARAHALLI VILLAGE , KASABA HOBLI, DODDABALLAPURA zone, BENGALURU RURAL district , Doddaballapura , Bengaluru Rural, Karnataka - 561205",
+  //   "waterSource": [
+  //     "Borewell"
+  //   ],
+  //   "projectType": "Plotted Development",
+  //   "complaints": {
+  //     "complaintsOnPromoter": [
+  //       {
+  //         "registrationNo": "PRM/KA/RERA/1250/301/PR/050924/007000",
+  //         "complaintNo": "00371/2025",
+  //         "complaintBy": "HOLY COW ADVISORS PRIVATE LIMITED",
+  //         "complaintDate": "04-03-2025",
+  //         "complaintSubject": "CHEATING",
+  //         "projectName": "KNS CANDRILL",
+  //         "promoterName": "KNS EQUITY ESTATES LLP",
+  //         "status": "UNDER ENQUIRY AUTHORITY BENCH4",
+  //         "orderBy": ""
+  //       }
+  //     ],
+  //     "complaintsOnProject": [
+  //       {
+  //         "registrationNo": "PRM/KA/RERA/1250/301/PR/050924/007000",
+  //         "complaintNo": "00371/2025",
+  //         "complaintBy": "HOLY COW ADVISORS PRIVATE LIMITED",
+  //         "complaintDate": "04-03-2025",
+  //         "complaintSubject": "CHEATING",
+  //         "projectName": "KNS CANDRILL",
+  //         "promoterName": "KNS EQUITY ESTATES LLP",
+  //         "status": "UNDER ENQUIRY AUTHORITY BENCH4",
+  //         "orderBy": ""
+  //       }
+  //     ]
+  //   },
+  //   "planApprovalDate": "15-06-2024",
+  //   "long": "77.5276627",
+  //   "handoverDate": "15-06-2029",
+  //   "reraId": "PRM/KA/RERA/1250/301/PR/050924/007000",
+  //   "acknowledgementNumber": "ACK/KA/RERA/1250/301/PR/280624/008282",
+  //   "litigationStatus": "NO",
+  //   "zone": "Bengaluru North",
+  //   "district": "Bengaluru Urban",
+  //   "projectStartDate": "15-06-2024",
+  //   "approvingAuthority": "BMRDA - Bangalore Metropolitan Region Development Authority",
+  //   "projectDescription": "projectType",
+  //   "promoterName": "KNS EQUITY ESTATES LLP",
+  //   "affidavitLink": "https://rera.karnataka.gov.in/download_jc?DOC_ID=rOV%2FQTpbIhnUhKZvot%2F4sQ%3D%3D",
+  //   "projectId": "PRM_KA_RERA_1250_301_PR_050924_007000",
+  //   "lat": "13.3392095",
+  //   "pinCode": 560001,
+  //   "projectName": "KNS CANDRILL",
+  //   "plotUnits": {},
+  //   "apartments": [],
+  //   "assetType": "plot",
+  //   "projectStatus": "ongoing",
+  //   "lastModified": 1758001030
+  // }]
 ];

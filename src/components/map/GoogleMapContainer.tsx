@@ -18,7 +18,7 @@ const containerStyle = {
 
 const bangaloreCenter = { lat: 12.9716, lng: 77.5946 };
 
-export function GoogleMapContainer() {
+export function GoogleMapContainer({ isMobile }: { isMobile: boolean }) {
   const { isLoaded, loadError } = useMapsApi();
   const [legendVisible, setLegendVisible] = useState(false);
   const [legendMinimized, setLegendMinimized] = useState(false);
@@ -131,6 +131,7 @@ export function GoogleMapContainer() {
         fullscreenControl: false,
         mapTypeControl: false,
         streetViewControl: false,
+        gestureHandling: "greedy",
         mapId: import.meta.env.VITE_GOOGLE_MAP_ID,
       }}
     >
@@ -183,7 +184,7 @@ export function GoogleMapContainer() {
       })}
       <MapLayersRenderer />
       <DrawOverlay />
-      <DrawTool />
+      <DrawTool isMobile={isMobile}/>
       <LayersControl />
       <MapLegend
         visible={legendVisible}

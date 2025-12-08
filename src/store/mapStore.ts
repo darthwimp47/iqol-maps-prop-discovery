@@ -25,9 +25,13 @@ interface MapState {
   setDrawingMode: (v: boolean) => void;
 
   drawnPolygon: google.maps.Polygon | null;
-  setDrawnPolygon: (poly: google.maps.Polygon | null) => void;
+  drawnPolygonPath: { lat: number; lng: number }[];        // <-- NEW
+  setDrawnPolygon: (
+    poly: google.maps.Polygon | null,
+    path?: { lat: number; lng: number }[] | null
+  ) => void;
 
-  // pre-draw snapshot (exact state to restore on cancel)
+  // Snapshot before drawing
   preDrawVisible?: any[];
   preDrawFiltered?: any[];
   setPreDrawSnapshot: (vis: any[], filt: any[]) => void;
@@ -69,30 +73,35 @@ export const useMapStore = create<MapState>((set, get) => ({
   filteredProperties: mockProperties,
   recommendedProperties: [],
 
-  // DRAWING STATE
+  // DRAWING
   drawingMode: false,
   setDrawingMode: (v) => set({ drawingMode: v }),
 
   drawnPolygon: null,
-  setDrawnPolygon: (poly) => set({ drawnPolygon: poly }),
+  drawnPolygonPath: [],                                       // <-- NEW
+
+  setDrawnPolygon: (poly, path = null) =>
+    set(() => ({
+      drawnPolygon: poly,
+      drawnPolygonPath: path ?? get().drawnPolygonPath,       // <-- NEW
+    })),
 
   // Pre-draw snapshot for exact restore if the user cancels
-  preDrawVisible: undefined as any[] | undefined,
-  preDrawFiltered: undefined as any[] | undefined,
-  setPreDrawSnapshot: (vis: any[], filt: any[]) => set({ preDrawVisible: vis, preDrawFiltered: filt }),
+  preDrawVisible: undefined,
+  preDrawFiltered: undefined,
+  setPreDrawSnapshot: (vis, filt) => set({ preDrawVisible: vis, preDrawFiltered: filt }),
   clearPreDrawSnapshot: () => set({ preDrawVisible: undefined, preDrawFiltered: undefined }),
 
   resetDrawArea: () => {
     const poly = get().drawnPolygon;
     if (poly) poly.setMap(null);
 
-    // Restore the exact pre-draw snapshot if available, otherwise fall back
-    // to global filteredProperties.
     const preVis = get().preDrawVisible;
     const preFilt = get().preDrawFiltered;
 
     set({
       drawnPolygon: null,
+      drawnPolygonPath: [],                                   // <-- CLEAR PATH
       drawingMode: false,
       visibleProperties: preVis ?? get().filteredProperties,
       filteredProperties: preFilt ?? get().filteredProperties,
@@ -106,13 +115,10 @@ export const useMapStore = create<MapState>((set, get) => ({
   },
 
   applyDrawArea: () => {
-    // Commit the current viewport-limited visibleProperties as the
-    // new global filtered set. Keep the drawn polygon visible so the
-    // user sees the boundary that was applied.
     const visible = get().visibleProperties;
+
     set({
       filteredProperties: visible,
-      // clear recommendations when applying a drawn boundary
       recommendedProperties: [],
       drawingMode: false,
     });
@@ -120,7 +126,6 @@ export const useMapStore = create<MapState>((set, get) => ({
     get().clearPreDrawSnapshot();
   },
 
-  // FILTERS
   applyFilters: () => {
     const {
       priceMin,
@@ -131,7 +136,7 @@ export const useMapStore = create<MapState>((set, get) => ({
       status,
     } = useFilterStore.getState();
 
-    const base = get().visibleProperties; // allow polygon filtering baseline
+    const base = get().visibleProperties;
 
     let strictResults = base.filter(
       (p: any) => p.price >= (priceMin ?? 0) && p.price <= (priceMax ?? Infinity)
@@ -145,28 +150,28 @@ export const useMapStore = create<MapState>((set, get) => ({
     }
 
     if (configuration.length > 0) {
-      strictResults = strictResults.filter((p: any) =>
+      strictResults = strictResults.filter((p) =>
         configuration.includes(p.configuration)
       );
-      recommended = recommended.filter((p: any) =>
+      recommended = recommended.filter((p) =>
         configuration.includes(p.configuration)
       );
     }
 
     if (propertyType.length > 0) {
-      strictResults = strictResults.filter((p: any) =>
+      strictResults = strictResults.filter((p) =>
         propertyType.includes(p.propertyType)
       );
-      recommended = recommended.filter((p: any) =>
+      recommended = recommended.filter((p) =>
         propertyType.includes(p.propertyType)
       );
     }
 
     if (status.length > 0) {
-      strictResults = strictResults.filter((p: any) =>
+      strictResults = strictResults.filter((p) =>
         status.includes(p.status)
       );
-      recommended = recommended.filter((p: any) =>
+      recommended = recommended.filter((p) =>
         status.includes(p.status)
       );
     }

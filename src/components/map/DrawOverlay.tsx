@@ -8,11 +8,12 @@ export function DrawOverlay() {
   return (
     <div
       className="
-        absolute top-0 left-0 w-full h-[60px]
-        bg-[rgba(0,0,0,0.55)] text-white
-        z-[9999] flex items-center justify-between
-        px-[15px] text-[16px]
-      "
+      absolute top-0 left-0 w-full
+      bg-[rgba(0,0,0,0.55)] text-white
+      z-[9999] flex items-center justify-between
+      px-[15px] text-[16px]
+      h-[60px] md:h-[60px] h-[85px]
+  "
     >
       <span>Draw a shape around the region(s) you would like to live in</span>
 

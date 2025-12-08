@@ -86,7 +86,7 @@ export default function MainLayout({ left, right, activeTab, isMobile, setActive
           className="
       absolute left-1/2 -translate-x-1/2 bottom-6
       bg-black text-white px-4 py-2 rounded-full
-      shadow-lg font-semibold z-[9999]
+      shadow-lg font-semibold z-[500]
     "
           onClick={() =>
             activeTab === "map" ? setActiveTab("list") : setActiveTab("map")
