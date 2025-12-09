@@ -45,11 +45,11 @@ export function PropertyTypeDropdown() {
       ref={dropdownRef}
       onClick={(e) => e.stopPropagation()}
       className="
-        absolute top-[-47px] right-[14.5%] translate-y-[45px]
-        w-[280px] p-[18px] bg-white
+        absolute top-[-51px] right-[8.7%] translate-y-[45px]
+        w-[310px] p-[18px] bg-white
         border border-[#dcdcdc] rounded-[10px]
         shadow-[0_4px_10px_rgba(0,0,0,0.12)]
-        z-[5000] pointer-events-auto
+        z-[150] pointer-events-auto
       "
     >
       <h4 className="mb-[14px] text-[15px] font-semibold text-[#333]">

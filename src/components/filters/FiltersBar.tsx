@@ -90,7 +90,7 @@ export function FiltersBar({ isMobile }: { isMobile: boolean }) {
         className="
           flex items-center gap-3 px-[18px] py-[10px]
           border-b border-[#cccccc] bg-white
-          h-[55px] relative justify-between w-full z-[999]
+          h-[57px] relative justify-between w-full z-[1]
         "
       >
         <SearchBar isMobile={isMobile} />

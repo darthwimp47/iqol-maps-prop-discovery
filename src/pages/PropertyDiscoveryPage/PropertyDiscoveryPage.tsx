@@ -55,11 +55,11 @@ function PropertyDiscoveryPageContent({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const pointer = 
+  const pointer =
     isStatusDropdownOpen ||
-    isPriceDropdownOpen ||
-    isConfigDropdownOpen ||
-    isPropertyTypeDropdownOpen
+      isPriceDropdownOpen ||
+      isConfigDropdownOpen ||
+      isPropertyTypeDropdownOpen
       ? "auto"
       : "none";
 
@@ -86,14 +86,14 @@ function PropertyDiscoveryPageContent({
       {/* MAIN CONTENT */}
       <div className="flex-1 overflow-hidden">
         <MainLayout
-          left={<MapPanel />}
+          left={<MapPanel isMobile={isMobile} />}
           right={<ListingPanel />}
           activeTab={activeTab}
           isMobile={isMobile}
           setActiveTab={setActiveTab}
         />
       </div>
-      
+
     </div>
   );
 }

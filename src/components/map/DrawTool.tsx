@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { useMapStore } from "../../store/mapStore";
 import { useFilterStore } from "../../store/filtersStore";
 
-export function DrawTool({ isMobile }: { isMobile: boolean }) {
+export function DrawTool() {
   const {
     map,
     drawingMode,
@@ -124,20 +124,15 @@ export function DrawTool({ isMobile }: { isMobile: boolean }) {
   }, [drawingMode]);
 
   return (
-    <div
-      className={
-        isMobile
-          ? "absolute bottom-[90px] right-[10px] z-[100]"  // below filter row
-          : "absolute top-[10px] right-[10px] z-[100]"
-      }
-    >      {!drawingMode && !drawnPolygon && (
-      <button
-        onClick={beginDraw}
-        className="px-3 py-1.5 bg-white text-black font-semibold border border-black rounded-[3px] cursor-pointer"
-      >
-        Draw
-      </button>
-    )}
+    <div className="absolute top-[10px] right-[10px] z-[100]">
+      {!drawingMode && !drawnPolygon && (
+        <button
+          onClick={beginDraw}
+          className="px-3 py-1.5 bg-white text-black font-semibold border border-black rounded-[3px] cursor-pointer"
+        >
+          Draw
+        </button>
+      )}
 
       {!drawingMode && drawnPolygon && (
         <button

@@ -51,8 +51,8 @@ export function ConfigDropdown() {
       ref={dropdownRef}
       onClick={(e) => e.stopPropagation()}
       className="
-        absolute top-[-47px] right-[24.4%] translate-y-[45px]
-        w-[280px] p-[18px] bg-white rounded-[10px] border border-[#dcdcdc]
+        absolute top-[-51px] right-[19.69%] translate-y-[45px]
+        w-[315px] p-[18px] bg-white rounded-[10px] border border-[#dcdcdc]
         shadow-[0_4px_10px_rgba(0,0,0,0.12)]
         z-[150]
       "

@@ -1,9 +1,13 @@
 import GoogleMapContainer from "./GoogleMapContainer";
 
-export function MapPanel() {
+interface MapPanelProps {
+  isMobile: boolean
+}
+
+export function MapPanel({ isMobile }: MapPanelProps) {
   return (
     <div style={{ width: "100%", height: "100%", zIndex: 100 }}>
-      <GoogleMapContainer />
+      <GoogleMapContainer isMobile={isMobile} />
     </div>
   );
 }

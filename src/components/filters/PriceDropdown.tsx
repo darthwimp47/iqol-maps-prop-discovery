@@ -48,7 +48,7 @@ export function PriceDropdown() {
       ref={dropdownRef}
       onClick={(e) => e.stopPropagation()}
       className="
-        absolute top-[-47px] right-[32.7%] translate-y-[45px]
+        absolute top-[-51px] right-[31.5%] translate-y-[45px]
         w-[250px] h-auto p-[18px]
         bg-white border border-[#dcdcdc] rounded-[10px]
         shadow-[0_4px_10px_rgba(0,0,0,0.12)]

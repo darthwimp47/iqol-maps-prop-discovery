@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFilterStore } from "../../store/filtersStore";
 import { useMapStore } from "../../store/mapStore";
 
-const options = ["Under Construction", "Ready to Move", "Completed", "Booking Open"];
+const options = ["Under Construction", "Ready to Move", "Completed"];
 
 export function StatusDropdown() {
   const { status, setStatus, closeStatusDropdown } = useFilterStore();
@@ -40,8 +40,8 @@ export function StatusDropdown() {
       ref={dropdownRef}
       onClick={(e) => e.stopPropagation()}
       className="
-        absolute top-[-47px] right-[33.5%] translate-y-[45px]
-        w-[300px] p-[18px] bg-white
+        absolute top-[-51px] right-[41.5%] translate-y-[45px]
+        w-[220px] p-[18px] bg-white
         border border-[#dcdcdc] rounded-[10px]
         shadow-[0_4px_10px_rgba(0,0,0,0.12)]
         z-[150]
