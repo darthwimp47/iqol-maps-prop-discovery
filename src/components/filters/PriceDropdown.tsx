@@ -92,7 +92,7 @@ export function PriceDropdown() {
             checked={strictBudget}
             onChange={() => setStrictBudget(!strictBudget)}
           />
-          Strict — Show only within range
+          Show only within the selected range
         </label>
 
         <label className="flex items-center gap-[6px] text-[14px] mb-[6px]">
@@ -101,7 +101,7 @@ export function PriceDropdown() {
             checked={flexibleBudget}
             onChange={() => setFlexibleBudget(!flexibleBudget)}
           />
-          Flexible — Include up to +10%
+          Flexible Budget (+10%)
         </label>
       </div>
 

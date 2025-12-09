@@ -76,48 +76,48 @@ export default function MainLayout({ left, right, activeTab, isMobile, setActive
 
 
 
-// return (
-//   <div className="flex w-full h-full">
-//     {!isMobile ? (
-//       <>
-//         {/* LEFT PANEL (Desktop) */}
-//         <div className="flex-1 border-r border-[#e0e0e0] overflow-hidden z-[10]">
-//           {left}
-//         </div>
+  // return (
+  //   <div className="flex w-full h-full">
+  //     {!isMobile ? (
+  //       <>
+  //         {/* LEFT PANEL (Desktop) */}
+  //         <div className="flex-1 border-r border-[#e0e0e0] overflow-hidden z-[10]">
+  //           {left}
+  //         </div>
 
-//         {/* RIGHT PANEL (Desktop) */}
-//         <div
-//           className="
-//             w-1/2 h-full overflow-y-auto bg-white
-//             shadow-[-9px_0_5px_-6px_rgba(0,0,0,0.35)]
-//             z-[15]
-//           "
-//         >
-//           {right}
-//         </div>
-//       </>
-//     ) : (
-//       <>
-//         {/* MOBILE — MAP TAB */}
-//         {activeTab === "map" && (
-//           <div className="flex-1 border-r border-[#e0e0e0] overflow-hidden z-[10]">
-//             {left}
-//           </div>
-//         )}
+  //         {/* RIGHT PANEL (Desktop) */}
+  //         <div
+  //           className="
+  //             w-1/2 h-full overflow-y-auto bg-white
+  //             shadow-[-9px_0_5px_-6px_rgba(0,0,0,0.35)]
+  //             z-[15]
+  //           "
+  //         >
+  //           {right}
+  //         </div>
+  //       </>
+  //     ) : (
+  //       <>
+  //         {/* MOBILE — MAP TAB */}
+  //         {activeTab === "map" && (
+  //           <div className="flex-1 border-r border-[#e0e0e0] overflow-hidden z-[10]">
+  //             {left}
+  //           </div>
+  //         )}
 
-//         {/* MOBILE — LIST TAB */}
-//         {activeTab === "list" && (
-//           <div
-//             className="
-//               w-full h-full overflow-y-auto bg-white
-//               shadow-[-9px_0_5px_-6px_rgba(0,0,0,0.35)]
-//               z-[15]
-//             "
-//           >
-//             {right}
-//           </div>
-//         )}
-//       </>
-//     )}
-//   </div>
-// );
+  //         {/* MOBILE — LIST TAB */}
+  //         {activeTab === "list" && (
+  //           <div
+  //             className="
+  //               w-full h-full overflow-y-auto bg-white
+  //               shadow-[-9px_0_5px_-6px_rgba(0,0,0,0.35)]
+  //               z-[15]
+  //             "
+  //           >
+  //             {right}
+  //           </div>
+  //         )}
+  //       </>
+  //     )}
+  //   </div>
+  // );

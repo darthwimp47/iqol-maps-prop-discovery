@@ -135,7 +135,7 @@ export function MoreFilters({ onClose }: { onClose: () => void }) {
                 checked={localStrictBudget}
                 onChange={() => setLocalStrictBudget((v) => !v)}
               />
-              Strict — Show only within range
+              Show only within the selected range
             </label>
 
             <label className="flex items-center gap-[6px] text-[14px] mb-[6px]">
@@ -144,7 +144,7 @@ export function MoreFilters({ onClose }: { onClose: () => void }) {
                 checked={localFlexibleBudget}
                 onChange={() => setLocalFlexibleBudget((v) => !v)}
               />
-              Flexible — Include up to +10%
+              Flexible Budget (+10%)
             </label>
           </div>
         </section>

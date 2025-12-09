@@ -16,9 +16,12 @@ const containerStyle = {
   height: "100%",
 };
 
+interface gMapProps{
+  isMobile?: boolean
+}
 const bangaloreCenter = { lat: 12.9716, lng: 77.5946 };
 
-export function GoogleMapContainer() {
+export function GoogleMapContainer(isMobile : gMapProps) {
   const { isLoaded, loadError } = useMapsApi();
   const [legendVisible, setLegendVisible] = useState(false);
   const [legendMinimized, setLegendMinimized] = useState(false);
