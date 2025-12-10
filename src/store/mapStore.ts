@@ -20,32 +20,26 @@ interface MapState {
   hoveredPropertyId: string | null;
   setHoveredPropertyId: (id: string | null) => void;
 
-  // DRAWING
+  // DRAW
   drawingMode: boolean;
   setDrawingMode: (v: boolean) => void;
 
   drawnPolygon: google.maps.Polygon | null;
-  drawnPolygonPath: { lat: number; lng: number }[];        // <-- NEW
+  drawnPolygonPath: { lat: number; lng: number }[];
+
   setDrawnPolygon: (
     poly: google.maps.Polygon | null,
     path?: { lat: number; lng: number }[] | null
   ) => void;
 
-  // Snapshot before drawing
-  preDrawVisible?: any[];
-  preDrawFiltered?: any[];
-  setPreDrawSnapshot: (vis: any[], filt: any[]) => void;
-  clearPreDrawSnapshot: () => void;
-
   resetDrawArea: () => void;
-  applyDrawArea: () => void;
 
-  visibleProperties: any[];
-  setVisibleProperties: (properties: any[]) => void;
-
+  // DATA
   filteredProperties: any[];
+  visibleProperties: any[];
   recommendedProperties: any[];
 
+  setVisibleProperties: (p: any[]) => void;
   applyFilters: () => void;
 }
 
@@ -67,63 +61,40 @@ export const useMapStore = create<MapState>((set, get) => ({
   hoveredPropertyId: null,
   setHoveredPropertyId: (id) => set({ hoveredPropertyId: id }),
 
-  visibleProperties: mockProperties,
-  setVisibleProperties: (properties) => set({ visibleProperties: properties }),
-
+  // DATA
   filteredProperties: mockProperties,
+  visibleProperties: mockProperties,
   recommendedProperties: [],
 
-  // DRAWING
+  setVisibleProperties: (p) => set({ visibleProperties: p }),
+
+  // DRAW
   drawingMode: false,
   setDrawingMode: (v) => set({ drawingMode: v }),
 
   drawnPolygon: null,
-  drawnPolygonPath: [],                                       // <-- NEW
+  drawnPolygonPath: [],
 
   setDrawnPolygon: (poly, path = null) =>
-    set(() => ({
+    set({
       drawnPolygon: poly,
-      drawnPolygonPath: path ?? get().drawnPolygonPath,       // <-- NEW
-    })),
-
-  // Pre-draw snapshot for exact restore if the user cancels
-  preDrawVisible: undefined,
-  preDrawFiltered: undefined,
-  setPreDrawSnapshot: (vis, filt) => set({ preDrawVisible: vis, preDrawFiltered: filt }),
-  clearPreDrawSnapshot: () => set({ preDrawVisible: undefined, preDrawFiltered: undefined }),
+      drawnPolygonPath: path ?? [],
+    }),
 
   resetDrawArea: () => {
     const poly = get().drawnPolygon;
     if (poly) poly.setMap(null);
 
-    const preVis = get().preDrawVisible;
-    const preFilt = get().preDrawFiltered;
-
     set({
       drawnPolygon: null,
-      drawnPolygonPath: [],                                   // <-- CLEAR PATH
+      drawnPolygonPath: [],
       drawingMode: false,
-      visibleProperties: preVis ?? get().filteredProperties,
-      filteredProperties: preFilt ?? get().filteredProperties,
+      visibleProperties: get().filteredProperties, // ✅ restore filters
     });
-
-    get().clearPreDrawSnapshot();
 
     const map = get().map;
     map?.panTo({ lat: 12.9716, lng: 77.5946 });
     map?.setZoom(11);
-  },
-
-  applyDrawArea: () => {
-    const visible = get().visibleProperties;
-
-    set({
-      filteredProperties: visible,
-      recommendedProperties: [],
-      drawingMode: false,
-    });
-
-    get().clearPreDrawSnapshot();
   },
 
   applyFilters: () => {
@@ -136,9 +107,9 @@ export const useMapStore = create<MapState>((set, get) => ({
       status,
     } = useFilterStore.getState();
 
-    const base = get().visibleProperties;
+    const base = mockProperties; // ✅ always full dataset
 
-    let strictResults = base.filter(
+    let strict = base.filter(
       (p: any) => p.price >= (priceMin ?? 0) && p.price <= (priceMax ?? Infinity)
     );
 
@@ -149,17 +120,15 @@ export const useMapStore = create<MapState>((set, get) => ({
       );
     }
 
-    if (configuration.length > 0) {
-      strictResults = strictResults.filter((p) =>
-        configuration.includes(p.configuration)
-      );
+    if (configuration.length) {
+      strict = strict.filter((p) => configuration.includes(p.configuration));
       recommended = recommended.filter((p) =>
         configuration.includes(p.configuration)
       );
     }
 
-    if (propertyType.length > 0) {
-      strictResults = strictResults.filter((p) =>
+    if (propertyType.length) {
+      strict = strict.filter((p) =>
         propertyType.includes(p.propertyType)
       );
       recommended = recommended.filter((p) =>
@@ -167,18 +136,20 @@ export const useMapStore = create<MapState>((set, get) => ({
       );
     }
 
-    if (status.length > 0) {
-      strictResults = strictResults.filter((p) =>
-        status.includes(p.status)
-      );
+    if (status.length) {
+      strict = strict.filter((p) => status.includes(p.status));
       recommended = recommended.filter((p) =>
         status.includes(p.status)
       );
     }
+
+    const { drawnPolygon, drawingMode } = get();
+    const hasSpatialOverride = !!drawnPolygon || drawingMode;
 
     set({
-      filteredProperties: strictResults,
+      filteredProperties: strict,
       recommendedProperties: recommended,
+      ...(hasSpatialOverride ? {} : { visibleProperties: strict }),
     });
   },
 }));

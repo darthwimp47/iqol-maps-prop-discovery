@@ -38,16 +38,20 @@ export function MapLegend({
       <div
         onClick={onToggle}
         className="
-          absolute bottom-[25px] left-[5px] z-[999]
-          bg-white rounded-[10px] shadow-[0_4px_12px_rgba(0,0,0,0.15)]
-          px-[12px] py-[6px] cursor-pointer
-          text-[#333] font-semibold text-[14px]
-        "
+        absolute bottom-[25px] left-[5px] z-[999]
+        bg-white rounded-full
+        w-[32px] h-[32px]
+        flex items-center justify-center
+        shadow-[0_4px_12px_rgba(0,0,0,0.15)]
+        cursor-pointer
+        text-[#333] font-semibold text-[14px]
+      "
       >
-        Legend ▲
+        i
       </div>
     );
   }
+
 
   return (
     <div
