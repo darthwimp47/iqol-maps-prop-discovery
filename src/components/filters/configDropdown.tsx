@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useFilterStore } from "../../store/filtersStore";
 import { useMapStore } from "../../store/mapStore";
+import { CONFIGURATION_OPTIONS } from "./Dropdown"
 
 export function ConfigDropdown() {
   const {
@@ -12,7 +13,7 @@ export function ConfigDropdown() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [localConfig, setLocalConfig] = useState(configuration);
 
-  const options = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "5+ BHK"];
+  // const options = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "5+ BHK"];
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -62,7 +63,7 @@ export function ConfigDropdown() {
       </h4>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {options.map((opt) => {
+        {CONFIGURATION_OPTIONS.map((opt) => {
           const active = localConfig.includes(opt);
           return (
             <button

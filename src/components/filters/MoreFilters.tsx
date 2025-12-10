@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useFilterStore } from "../../store/filtersStore";
 import { useMapStore } from "../../store/mapStore";
+import { CONFIGURATION_OPTIONS,PROPERTY_TYPE_OPTIONS } from "./Dropdown"
 
-const configOptions = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "5+ BHK"];
-const propertyOptions = ["Apartment", "Villa", "Plot", "Commercial", "Studio"];
+// const configOptions = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "5+ BHK"];
+// const propertyOptions = ["Apartment", "Villa", "Plot", "Commercial", "Studio"];
 
 export function MoreFilters({ onClose }: { onClose: () => void }) {
   const {
@@ -155,7 +156,7 @@ export function MoreFilters({ onClose }: { onClose: () => void }) {
           <hr className="my-2 mb-4" />
 
           <div className="flex flex-wrap gap-2 mb-2">
-            {configOptions.map((opt) => {
+            {CONFIGURATION_OPTIONS.map((opt) => {
               const active = localConfig.includes(opt);
               return (
                 <button
@@ -183,7 +184,7 @@ export function MoreFilters({ onClose }: { onClose: () => void }) {
           <hr className="my-2 mb-4" />
 
           <div className="flex flex-wrap gap-[8px]">
-            {propertyOptions.map((type) => {
+            {PROPERTY_TYPE_OPTIONS.map((type) => {
               const active = localPropertyType.includes(type);
               return (
                 <button

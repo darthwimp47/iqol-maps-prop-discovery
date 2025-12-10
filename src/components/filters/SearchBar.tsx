@@ -1,88 +1,141 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMapsApi } from "../../context/MapsContext";
 import { useMapStore } from "../../store/mapStore";
 
 export function SearchBar({ isMobile }: { isMobile: boolean }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { setCenter, setZoom, map } = useMapStore();
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  const { map } = useMapStore();
   const { isLoaded } = useMapsApi();
+
   const [value, setValue] = useState("");
 
+  // ✅ Initialize Google Autocomplete
   useEffect(() => {
     if (!isLoaded || !inputRef.current) return;
 
-    const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
-      fields: ["geometry", "name"],
-      types: ["geocode"],
-      componentRestrictions: { country: "in" },
-    });
+    autocompleteRef.current = new google.maps.places.Autocomplete(
+      inputRef.current,
+      {
+        fields: ["geometry", "name", "formatted_address"],
+        types: ["geocode"],
+        componentRestrictions: { country: "in" },
+      }
+    );
 
-    const handlePlaceChanged = () => {
-      const place = autocomplete.getPlace();
-      if (!place.geometry?.location) return;
+    autocompleteRef.current.addListener("place_changed", () => {
+      const place = autocompleteRef.current?.getPlace();
+      if (!place?.geometry?.location) return;
+
+      const displayValue =
+        place.formatted_address || place.name || "";
+
+      setValue(displayValue);
 
       map?.setCenter(place.geometry.location);
       map?.setZoom(14);
-    };
-
-    autocomplete.addListener("place_changed", handlePlaceChanged);
+    });
 
     return () => {
-      // @ts-ignore
-      if (autocomplete && autocomplete.unbindAll) autocomplete.unbindAll();
+      autocompleteRef.current = null;
     };
-  }, [isLoaded, map, setCenter, setZoom]);
+  }, [isLoaded, map]);
 
+  // ✅ CLEAR SEARCH
   const handleClear = () => {
     setValue("");
-    if (inputRef.current) inputRef.current.value = "";
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.focus();
+    }
   };
 
+  // ✅ SEARCH BUTTON ACTION (this was missing)
   const triggerSearch = () => {
-    const enterEvent = new KeyboardEvent("keydown", { key: "Enter", code: "Enter" });
-    inputRef.current?.dispatchEvent(enterEvent);
+    if (!inputRef.current) return;
+
+    inputRef.current.focus();
+
+    // Let Google Autocomplete select first suggestion
+    const event = new KeyboardEvent("keydown", {
+      key: "Enter",
+      code: "Enter",
+      bubbles: true,
+    });
+
+    inputRef.current.dispatchEvent(event);
   };
 
   return (
     <div
       className={`
         relative flex items-center
-        ${isMobile ? "w-full mb-2 mt-2" : "w-[500px]"}
+        ${isMobile ? "w-full mt-2 mb-2" : "w-[500px]"}
       `}
     >
+      {/* input */}
       <input
         ref={inputRef}
         type="text"
-        placeholder="Search Bangalore..."
+        placeholder="Search Bangalore…"
         disabled={!isLoaded}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && triggerSearch()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            triggerSearch();
+          }
+        }}
         className={`
-          w-full outline-none text-black bg-white border border-[#ccc] rounded-[10px]
-          ${isMobile ? "h-[46px] text-[16px] pr-[70px] pl-[14px]" : "h-[40px] text-[15px] pr-[80px] pl-[14px]"}
+          w-full bg-white text-black
+          border border-[#d0d0d0]
+          rounded-lg
+          outline-none
+          transition-all
+          focus:border-black focus:ring-1 focus:ring-black
+          disabled:bg-[#f5f5f5] disabled:cursor-not-allowed
+          ${isMobile
+            ? "h-[46px] text-[16px] pl-[16px] pr-[80px]"
+            : "h-[42px] text-[15px] pl-[16px] pr-[80px]"
+          }
         `}
       />
 
+      {/* CLEAR BUTTON */}
       {value && (
         <button
           onClick={handleClear}
           className={`
-            absolute flex justify-center items-center
-            bg-black text-white rounded-full font-bold
-            w-[18px] h-[18px] text-[12px] leading-[19px]
-            ${isMobile ? "right-[40px]" : "right-[45px]"}
+            absolute 
+            right-[53px]
+            w-[16px] h-[16px]
+            flex items-center justify-center
+            rounded-full
+            bg-black text-white
+            text-[10px]
+            leading-none
+            p-0
+            cursor-pointer
           `}
         >
-          ✕
+          ×
         </button>
       )}
 
+      {/* search button */}
       <button
         onClick={triggerSearch}
         className={`
-          absolute right-[10px] bg-transparent border-none cursor-pointer
-          ${isMobile ? "text-[20px]" : "text-[18px]"}
+          absolute 
+          right-[15px]
+          p-2
+          rounded-md
+          bg-transparent
+          cursor-pointer
+          flex items-center justify-center
+          hover:opacity-90
+          ${isMobile ? "text-[14px]" : "text-[13px]"}
         `}
       >
         🔍

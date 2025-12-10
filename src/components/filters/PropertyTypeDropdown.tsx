@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useFilterStore } from "../../store/filtersStore";
 import { useMapStore } from "../../store/mapStore";
+import { PROPERTY_TYPE_OPTIONS } from "./Dropdown"
 
-const propertyOptions = ["Apartment", "Villa", "Plot", "Commercial", "Studio"];
+
+// const propertyOptions = ["Apartment", "Villa", "Plot", "Commercial", "Studio"];
 
 export function PropertyTypeDropdown() {
   const {
@@ -57,7 +59,7 @@ export function PropertyTypeDropdown() {
       </h4>
 
       <div className="flex flex-wrap gap-[8px] mb-[18px]">
-        {propertyOptions.map((type) => {
+        {PROPERTY_TYPE_OPTIONS.map((type) => {
           const active = localPropertyType.includes(type);
           return (
             <button

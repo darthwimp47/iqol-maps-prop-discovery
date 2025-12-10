@@ -3,6 +3,8 @@ import { ListingCard } from "./ListingCard";
 import { useMapStore } from "../../store/mapStore";
 import { useState, useMemo } from "react";
 
+import type { SortKey } from "../filters/Dropdown";
+
 export function ListingPanel() {
   const {
     filteredProperties,
@@ -10,31 +12,30 @@ export function ListingPanel() {
     visibleProperties,
     selectedPropertyId,
     hoveredPropertyId,
-    // map,
   } = useMapStore();
 
-  const [sortBy, setSortBy] = useState("Homes for You"); // renamed from Homes for You
+  // Sort state uses canonical key
+  const [sortBy, setSortBy] = useState<SortKey>("homesForYou");
 
-  const handleSort = (option: string) => {
-    setSortBy(option);                    // update selected option
+  // Correctly typed handler
+  const handleSort = (key: SortKey) => {
+    setSortBy(key);
   };
 
-  // Compute the list based on the intersection of global filters and viewport
+  // Sort ONLY the intersection of filtered + visible
   const sortedProperties = useMemo(() => {
     const filteredIds = new Set(filteredProperties.map((p) => p.id));
-
-    // Show only properties that are both globally filtered AND currently visible in viewport
     const arr = visibleProperties.filter((p) => filteredIds.has(p.id));
 
     switch (sortBy) {
-      case "Price (High to Low)":
-        return arr.sort((a, b) => b.price - a.price);
+      case "priceHighToLow":
+        return [...arr].sort((a, b) => b.price - a.price);
 
-      case "Price (Low to High)":
-        return arr.sort((a, b) => a.price - b.price);
+      case "priceLowToHigh":
+        return [...arr].sort((a, b) => a.price - b.price);
 
-      case "Newest":
-        return arr.reverse(); // placeholder until backend date field exists
+      case "newest":
+        return [...arr].reverse();
 
       default:
         return arr;
@@ -50,7 +51,9 @@ export function ListingPanel() {
     <div className="p-4 h-full bg-transparent border-l border-gray-200 overflow-y-auto z-150 shadow-xl">
       {/* HEADER */}
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-3xl font-bold text-gray-900">Property For Sale</h3>
+        <h3 className="text-3xl font-bold text-gray-900">
+          Property For Sale
+        </h3>
 
         <SortDropdown selected={sortBy} onSelect={handleSort} />
       </div>
@@ -61,20 +64,15 @@ export function ListingPanel() {
 
       {/* GRID LIST */}
       <div className="grid grid-cols-2 gap-4">
-        {sortedProperties.map((p) => {
-          const isActive = selectedPropertyId === p.id;
-          const isHover = hoveredPropertyId === p.id;
-
-          return (
-            <ListingCard
-              key={p.id}
-              property={p}
-              isRecommended={false}
-              isActive={isActive}
-              isHovered={isHover}
-            />
-          );
-        })}
+        {sortedProperties.map((p) => (
+          <ListingCard
+            key={p.id}
+            property={p}
+            isRecommended={false}
+            isActive={selectedPropertyId === p.id}
+            isHovered={hoveredPropertyId === p.id}
+          />
+        ))}
 
         {/* RECOMMENDED SECTION */}
         {visibleRecommended.length > 0 && (
@@ -87,7 +85,7 @@ export function ListingPanel() {
               <ListingCard
                 key={`rec-${p.id}`}
                 property={p}
-                isRecommended={true}
+                isRecommended
                 isActive={selectedPropertyId === p.id}
               />
             ))}
@@ -97,4 +95,3 @@ export function ListingPanel() {
     </div>
   );
 }
-

@@ -1,22 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import { SORT_OPTIONS, SORT_LABELS } from "../filters/Dropdown";
+import type { SortKey } from "../filters/Dropdown";
 
 interface SortDropdownProps {
-  selected: string;
-  onSelect: (option: string) => void;
+  selected: SortKey;
+  onSelect: (key: SortKey) => void;
 }
 
 export function SortDropdown({ selected, onSelect }: SortDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement | null>(null);
-
-  const sortOptions = [
-    "Homes for You",
-    "Price (High to Low)",
-    "Price (Low to High)",
-    "Newest",
-    "Bedrooms",
-    "Square Feet",
-  ];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -24,14 +17,13 @@ export function SortDropdown({ selected, onSelect }: SortDropdownProps) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   return (
     <div ref={sortRef} className="relative">
-      {/* Sort button */}
+      {/* Trigger */}
       <div
         className="
           text-sm font-semibold underline text-[rgb(13,69,153)]
@@ -42,30 +34,31 @@ export function SortDropdown({ selected, onSelect }: SortDropdownProps) {
           setIsOpen((prev) => !prev);
         }}
       >
-        Sort: {selected}
+        Sort: {SORT_LABELS[selected]}
       </div>
 
       {isOpen && (
         <div
           className="
             absolute right-0 mt-[10px] w-[220px]
-            bg-white rounded-[10px] shadow-[0_4px_16px_rgba(0,0,0,0.15)]
+            bg-white rounded-[10px]
+            shadow-[0_4px_16px_rgba(0,0,0,0.15)]
             py-[12px] z-[9999]
           "
         >
-          {sortOptions.map((opt) => (
+          {SORT_OPTIONS.map((key) => (
             <div
-              key={opt}
+              key={key}
               className="
                 px-4 py-2 text-gray-800 text-sm cursor-pointer
                 hover:bg-gray-100 transition
               "
               onClick={() => {
-                onSelect(opt);
+                onSelect(key);
                 setIsOpen(false);
               }}
             >
-              {opt}
+              {SORT_LABELS[key]}
             </div>
           ))}
         </div>

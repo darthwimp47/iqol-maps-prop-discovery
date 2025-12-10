@@ -3,6 +3,7 @@ import { useFilterStore } from "../../store/filtersStore";
 import { useMapStore } from "../../store/mapStore";
 import { SearchBar } from "./SearchBar";
 import { MoreFilters } from "./MoreFilters";
+import { FilterButton } from "./FilterButton";
 
 export function FiltersBar({ isMobile }: { isMobile: boolean }) {
   const {
@@ -169,21 +170,5 @@ export function FiltersBar({ isMobile }: { isMobile: boolean }) {
         </>
       )}
     </div>
-  );
-}
-
-function FilterButton({ label, onClick, isOpen, isActive }: any) {
-  return (
-    <button
-      onClick={onClick}
-      className={`
-        flex gap-2 items-center font-semibold text-[14px] cursor-pointer
-        px-[14px] py-[8px] rounded-md bg-white text-[#222]
-        ${isActive ? "border-2 border-[#0077ff]" : "border border-[#d0d0d0]"}
-      `}
-    >
-      {label}
-      <span className={`${isOpen ? "rotate-180" : ""} transition-transform`}>▼</span>
-    </button>
   );
 }

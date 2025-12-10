@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useFilterStore } from "../../store/filtersStore";
 import { useMapStore } from "../../store/mapStore";
+import { STATUS_OPTIONS } from "./Dropdown";
 
-const options = ["Under Construction", "Ready to Move", "Completed"];
+// const options = ["Under Construction", "Ready to Move", "Completed"];
 
 export function StatusDropdown() {
   const { status, setStatus, closeStatusDropdown } = useFilterStore();
@@ -52,7 +53,7 @@ export function StatusDropdown() {
       </h4>
 
       <div className="flex flex-wrap gap-[8px] mb-[16px]">
-        {options.map((opt) => {
+        {STATUS_OPTIONS.map((opt) => {
           const active = localStatus.includes(opt);
           return (
             <button
@@ -85,3 +86,7 @@ export function StatusDropdown() {
     </div>
   );
 }
+
+
+
+      {/* e-manual(💃🏻 🌮) inputs */}
