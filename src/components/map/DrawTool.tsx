@@ -24,44 +24,36 @@ export function DrawTool() {
     useFilterStore.getState().closeAllDropdowns?.();
     setDrawingMode(true);
 
-    startListenerRef.current = map.addListener(
-      "mousedown",
-      (e: google.maps.MapMouseEvent) => {
-        if (!e.latLng) return;
+    startListenerRef.current = map.addListener("mousedown", (e: google.maps.MapMouseEvent) => {
+      if (!e.latLng) return;
 
-        map.setOptions({
-          draggable: false,
-          zoomControl: false,
-          scrollwheel: false,
-          disableDoubleClickZoom: true,
-          draggableCursor: "crosshair",
-        });
+      map.setOptions({
+        draggable: false,
+        zoomControl: false,
+        scrollwheel: false,
+        disableDoubleClickZoom: true,
+        draggableCursor: "crosshair",
+      });
 
-        const polyline = new google.maps.Polyline({
-          map,
-          clickable: false,
-          strokeColor: "#1a73e8",
-          strokeWeight: 2,
-        });
+      const polyline = new google.maps.Polyline({
+        map,
+        clickable: false,
+        strokeColor: "#1a73e8",
+        strokeWeight: 2,
+      });
 
-        polylineRef.current = polyline;
-        polyline.getPath().push(e.latLng);
+      polylineRef.current = polyline;
+      polyline.getPath().push(e.latLng);
 
-        mouseMoveRef.current = map.addListener(
-          "mousemove",
-          (moveEvt: google.maps.MapMouseEvent) => {
-            if (moveEvt.latLng && polylineRef.current) {
-              polylineRef.current.getPath().push(moveEvt.latLng);
-            }
-          }
-        );
+      mouseMoveRef.current = map.addListener("mousemove", (ev: google.maps.MapMouseEvent) => {
+        if (ev.latLng) polyline.getPath().push(ev.latLng);
+      });
 
-        mouseUpRef.current = map.addListener("mouseup", finishDraw);
+      mouseUpRef.current = map.addListener("mouseup", finishDraw);
 
-        google.maps.event.removeListener(startListenerRef.current!);
-        startListenerRef.current = null;
-      }
-    );
+      google.maps.event.removeListener(startListenerRef.current!);
+      startListenerRef.current = null;
+    });
   };
 
   const finishDraw = () => {
@@ -80,11 +72,12 @@ export function DrawTool() {
       strokeWeight: 2,
     });
 
-    setDrawnPolygon(
-      polygon,
-      path.map((pt) => ({ lat: pt.lat(), lng: pt.lng() }))
-    );
+    const pathArray = path.map((pt) => ({
+      lat: pt.lat(),
+      lng: pt.lng(),
+    }));
 
+    setDrawnPolygon(polygon, pathArray);
     setDrawingMode(false);
 
     map.setOptions({
@@ -95,21 +88,19 @@ export function DrawTool() {
       draggableCursor: "grab",
     });
 
-    if (mouseMoveRef.current)
-      google.maps.event.removeListener(mouseMoveRef.current);
-    if (mouseUpRef.current)
-      google.maps.event.removeListener(mouseUpRef.current);
+    if (mouseMoveRef.current) google.maps.event.removeListener(mouseMoveRef.current);
+    if (mouseUpRef.current) google.maps.event.removeListener(mouseUpRef.current);
 
+    /** FILTER LOGIC */
     const base = useMapStore.getState().filteredProperties;
-    const g = google.maps.geometry.poly;
-
-    const inside = base.filter((p: any) =>
-      g.containsLocation(
+    const inside = base.filter((p) =>
+      google.maps.geometry.poly.containsLocation(
         new google.maps.LatLng(p.lat, p.lng),
         polygon
       )
     );
 
+    // <<< IMPORTANT: UPDATE MAP + LIST PANEL
     setVisibleProperties(inside);
   };
 

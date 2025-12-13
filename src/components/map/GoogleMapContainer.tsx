@@ -16,12 +16,12 @@ const containerStyle = {
   height: "100%",
 };
 
-interface gMapProps{
+interface gMapProps {
   isMobile?: boolean
 }
 const bangaloreCenter = { lat: 12.9716, lng: 77.5946 };
 
-export function GoogleMapContainer({sMobile : gMapProps}) {
+export function GoogleMapContainer(isMobile: gMapProps) {
   const { isLoaded, loadError } = useMapsApi();
   const [legendVisible, setLegendVisible] = useState(false);
   const [legendMinimized, setLegendMinimized] = useState(false);
@@ -40,6 +40,7 @@ export function GoogleMapContainer({sMobile : gMapProps}) {
     setVisibleProperties,
     filteredProperties,
     recommendedProperties,
+    visibleProperties,
   } = useMapStore();
 
   // Derive infrastructure filters from visibleLayers
@@ -80,7 +81,7 @@ export function GoogleMapContainer({sMobile : gMapProps}) {
 
       const bounds = mapInstance.getBounds();
       if (bounds) {
-        const visible = baseProperties.filter((p) =>
+        const visible = filteredProperties.filter((p) =>
           bounds!.contains(new google.maps.LatLng(p.lat, p.lng))
         );
         setVisibleProperties(visible);
@@ -108,7 +109,7 @@ export function GoogleMapContainer({sMobile : gMapProps}) {
       setBounds(newBounds ?? null);
 
       if (newBounds) {
-        const visible = baseProperties.filter((p) =>
+        const visible = filteredProperties.filter((p) =>
           newBounds.contains(new google.maps.LatLng(p.lat, p.lng))
         );
         setVisibleProperties(visible);
@@ -140,7 +141,7 @@ export function GoogleMapContainer({sMobile : gMapProps}) {
     >
       {/* POPUP */}
       {selectedPropertyId && (() => {
-        const p = baseProperties.find((x) => x.id === selectedPropertyId);
+        const p = visibleProperties.find((x) => x.id === selectedPropertyId);
         if (!p) return null;
 
         return (
@@ -156,7 +157,7 @@ export function GoogleMapContainer({sMobile : gMapProps}) {
       })()}
 
       {/* MARKERS */}
-      {baseProperties.map((p) => {
+      {visibleProperties.map((p) => {
         const isRecommended = recommendedProperties.some((r) => r.id === p.id);
         const isActive = selectedPropertyId === p.id;
         const isHover = hoveredPropertyId === p.id;
@@ -187,7 +188,7 @@ export function GoogleMapContainer({sMobile : gMapProps}) {
       })}
       <MapLayersRenderer />
       <DrawOverlay />
-      <DrawTool/>
+      <DrawTool />
       <LayersControl />
       <MapLegend
         visible={legendVisible}

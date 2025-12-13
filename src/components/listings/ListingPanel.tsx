@@ -24,28 +24,24 @@ export function ListingPanel() {
 
   // Sort ONLY the intersection of filtered + visible
   const sortedProperties = useMemo(() => {
-    const filteredIds = new Set(filteredProperties.map((p) => p.id));
-    const arr = visibleProperties.filter((p) => filteredIds.has(p.id));
+    const arr = visibleProperties;
 
     switch (sortBy) {
       case "priceHighToLow":
         return [...arr].sort((a, b) => b.price - a.price);
-
       case "priceLowToHigh":
         return [...arr].sort((a, b) => a.price - b.price);
-
       case "newest":
         return [...arr].reverse();
-
       default:
         return arr;
     }
-  }, [filteredProperties, visibleProperties, sortBy]);
+  }, [visibleProperties, sortBy]);
 
-  const visibleRecommended = useMemo(() => {
-    const recIds = new Set(recommendedProperties.map((p) => p.id));
-    return visibleProperties.filter((p) => recIds.has(p.id));
-  }, [recommendedProperties, visibleProperties]);
+  const visibleRecommended = recommendedProperties.filter((p) =>
+    visibleProperties.some((v) => v.id === p.id)
+  );
+
 
   return (
     <div className="p-4 h-full bg-transparent border-l border-gray-200 overflow-y-auto z-150 shadow-xl">

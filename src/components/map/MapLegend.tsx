@@ -1,4 +1,4 @@
-import { AmenitiesIcon, MetroIcon, WaterIcon, SewerIcon, RoadsIcon } from "../map/LayersIcon";
+// import { AmenitiesIcon, MetroIcon, WaterIcon, SewerIcon, RoadsIcon } from "../map/LayersIcon";
 
 interface MapLegendProps {
   visible: boolean;
@@ -52,7 +52,6 @@ export function MapLegend({
     );
   }
 
-
   return (
     <div
       className={`
@@ -63,7 +62,11 @@ export function MapLegend({
     >
       {/* Header */}
       <div className="flex items-center relative px-[6px] py-[6px] border-b border-[#ddd] mb-[8px]">
-        <AmenitiesIcon size={25} />
+        <img
+          src="src/assets/AmenitiesIcon.svg"
+          width={25}
+          height={25}
+        />
         <h4 className="absolute left-[46px] m-0 text-[16px] font-bold">Legend</h4>
 
         <button
@@ -97,7 +100,10 @@ export function MapLegend({
         {infrastructureFilters.metro && (
           <div className="mb-[14px] pl-[3px]">
             <div className="flex items-center mb-[8px]">
-              <MetroIcon size={20} />
+              <img
+                src="src/assets/MetroIcon.svg"
+                width={25}
+                height={25} />
               <span className="ml-[6px] font-semibold text-[14px]">Metro</span>
             </div>
 
@@ -147,7 +153,11 @@ export function MapLegend({
         {infrastructureFilters.sewage && (
           <div className="mb-[14px] pl-[3px]">
             <div className="flex items-center mb-[8px]">
-              <SewerIcon size={20} />
+              <img
+                src="src/assets/SewerIcon.svg"
+                height={20}
+                width={20}
+              />
               <span className="ml-[6px] font-semibold text-[14px]">Sewage Lines</span>
             </div>
 
@@ -169,7 +179,11 @@ export function MapLegend({
         {infrastructureFilters.water && (
           <div className="mb-[14px] pl-[3px]">
             <div className="flex items-center mb-[8px]">
-              <WaterIcon size={20} />
+              <img
+                src="src/assets/WaterIcon.svg"
+                height={20}
+                width={20}
+              />
               <span className="ml-[6px] font-semibold text-[14px]">Water Lines</span>
             </div>
 
@@ -191,8 +205,11 @@ export function MapLegend({
         {infrastructureFilters.majorRoads && (
           <div className="mb-[14px] pl-[3px]">
             <div className="flex items-center mb-[8px]">
-              <RoadsIcon size={20} />
-              <span className="ml-[6px] font-semibold text-[14px]">Major Roads</span>
+              <img
+                src="src/assets/RoadsIcon.svg"
+                height={20}
+                width={20}
+              />              <span className="ml-[6px] font-semibold text-[14px]">Major Roads</span>
             </div>
 
             <div className="ml-[4px] space-y-[2px]">

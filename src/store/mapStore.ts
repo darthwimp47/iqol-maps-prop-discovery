@@ -89,67 +89,82 @@ export const useMapStore = create<MapState>((set, get) => ({
       drawnPolygon: null,
       drawnPolygonPath: [],
       drawingMode: false,
-      visibleProperties: get().filteredProperties, // ✅ restore filters
     });
 
+    // Re-apply current filters on the FULL dataset
+    get().applyFilters();
+
+    // Re-apply viewport logic (bounds based)
     const map = get().map;
-    map?.panTo({ lat: 12.9716, lng: 77.5946 });
-    map?.setZoom(11);
+    const bounds = map?.getBounds();
+
+    if (map && bounds) {
+      const filtered = get().filteredProperties;
+      const visible = filtered.filter((p: any) =>
+        bounds.contains(new google.maps.LatLng(p.lat, p.lng))
+      );
+      set({ visibleProperties: visible });
+    }
   },
 
   applyFilters: () => {
     const {
       priceMin,
       priceMax,
-      flexibleBudget,
       configuration,
       propertyType,
       status,
+      flexibleBudget,
     } = useFilterStore.getState();
 
-    const base = mockProperties; // ✅ always full dataset
+    const polygonPath = get().drawnPolygonPath;
+    const g = google.maps.geometry.poly;
 
-    let strict = base.filter(
-      (p: any) => p.price >= (priceMin ?? 0) && p.price <= (priceMax ?? Infinity)
-    );
+    let final = mockProperties;
 
+    // 1 — APPLY DATA FILTERS
+    final = final.filter((p: any) => {
+      if (priceMin !== null && p.price < priceMin) return false;
+      if (priceMax !== null && p.price > priceMax) return false;
+
+      if (configuration.length > 0 && !configuration.includes(p.configuration))
+        return false;
+
+      if (propertyType.length > 0 && !propertyType.includes(p.propertyType))
+        return false;
+
+      if (status.length > 0 && !status.includes(p.status))
+        return false;
+
+      return true;
+    });
+
+    // 2 — FLEXIBLE BUDGET
     let recommended: any[] = [];
     if (flexibleBudget && priceMax) {
-      recommended = base.filter(
-        (p: any) => p.price > priceMax && p.price <= priceMax * 1.1
+      recommended = final.filter(
+        (p) => p.price > priceMax && p.price <= priceMax * 1.1
       );
     }
 
-    if (configuration.length) {
-      strict = strict.filter((p) => configuration.includes(p.configuration));
+    // 3 — APPLY LOCATION FILTER (ONLY IF POLYGON EXISTS)
+    if (polygonPath.length > 0) {
+      const polygon = new google.maps.Polygon({ paths: polygonPath });
+
+      final = final.filter((p: any) =>
+        g.containsLocation(new google.maps.LatLng(p.lat, p.lng), polygon)
+      );
+
       recommended = recommended.filter((p) =>
-        configuration.includes(p.configuration)
+        g.containsLocation(new google.maps.LatLng(p.lat, p.lng), polygon)
       );
     }
 
-    if (propertyType.length) {
-      strict = strict.filter((p) =>
-        propertyType.includes(p.propertyType)
-      );
-      recommended = recommended.filter((p) =>
-        propertyType.includes(p.propertyType)
-      );
-    }
-
-    if (status.length) {
-      strict = strict.filter((p) => status.includes(p.status));
-      recommended = recommended.filter((p) =>
-        status.includes(p.status)
-      );
-    }
-
-    const { drawnPolygon, drawingMode } = get();
-    const hasSpatialOverride = !!drawnPolygon || drawingMode;
-
+    // 4 — FINAL STATE
     set({
-      filteredProperties: strict,
+      filteredProperties: final,
+      visibleProperties: final,
       recommendedProperties: recommended,
-      ...(hasSpatialOverride ? {} : { visibleProperties: strict }),
     });
   },
 }));
