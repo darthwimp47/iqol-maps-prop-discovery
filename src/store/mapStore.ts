@@ -2,6 +2,11 @@ import { create } from "zustand";
 import { mockProperties } from "../mock/properties.mock";
 import { useFilterStore } from "./filtersStore";
 
+interface DrawPolygon {
+  polygon: google.maps.Polygon;
+  path: { lat: number; lng: number }[];
+}
+
 interface MapState {
   center: { lat: number; lng: number };
   zoom: number;
@@ -24,14 +29,14 @@ interface MapState {
   drawingMode: boolean;
   setDrawingMode: (v: boolean) => void;
 
-  drawnPolygon: google.maps.Polygon | null;
-  drawnPolygonPath: { lat: number; lng: number }[];
+  drawnPolygons: DrawPolygon[];
 
-  setDrawnPolygon: (
-    poly: google.maps.Polygon | null,
-    path?: { lat: number; lng: number }[] | null
+  addDrawPolygon: (
+    polygon: google.maps.Polygon,
+    path: { lat: number; lng: number }[]
   ) => void;
 
+  applyDrawArea: () => void;
   resetDrawArea: () => void;
 
   // DATA
@@ -72,22 +77,58 @@ export const useMapStore = create<MapState>((set, get) => ({
   drawingMode: false,
   setDrawingMode: (v) => set({ drawingMode: v }),
 
-  drawnPolygon: null,
-  drawnPolygonPath: [],
+  drawnPolygons: [],
 
-  setDrawnPolygon: (poly, path = null) =>
+  addDrawPolygon: (polygon, path) =>
+    set((state) => ({
+      drawnPolygons: [...state.drawnPolygons, { polygon, path }],
+    })),
+
+  applyDrawArea: () => {
+    const { drawnPolygons } = get();
+    if (drawnPolygons.length === 0) return;
+
+    // Step 1: Apply existing DATA filters first
+    get().applyFilters();
+
+    const g = google.maps.geometry.poly;
+    let final = get().filteredProperties;
+    let recommended = get().recommendedProperties;
+
+    // Step 2: Apply LOCATION filter (OR logic)
+    final = final.filter((p: any) =>
+      drawnPolygons.some(({ polygon }) =>
+        g.containsLocation(
+          new google.maps.LatLng(p.lat, p.lng),
+          polygon
+        )
+      )
+    );
+
+    recommended = recommended.filter((p: any) =>
+      drawnPolygons.some(({ polygon }) =>
+        g.containsLocation(
+          new google.maps.LatLng(p.lat, p.lng),
+          polygon
+        )
+      )
+    );
+
     set({
-      drawnPolygon: poly,
-      drawnPolygonPath: path ?? [],
-    }),
+      filteredProperties: final,
+      visibleProperties: final,
+      recommendedProperties: recommended,
+      drawingMode: false,
+    });
+  },
 
   resetDrawArea: () => {
-    const poly = get().drawnPolygon;
-    if (poly) poly.setMap(null);
+    const { drawnPolygons, map } = get();
+
+    drawnPolygons.forEach(({ polygon }) => polygon.setMap(null));
 
     set({
-      drawnPolygon: null,
-      drawnPolygonPath: [],
+      drawnPolygons: [],
       drawingMode: false,
     });
 
@@ -95,9 +136,7 @@ export const useMapStore = create<MapState>((set, get) => ({
     get().applyFilters();
 
     // Re-apply viewport logic (bounds based)
-    const map = get().map;
     const bounds = map?.getBounds();
-
     if (map && bounds) {
       const filtered = get().filteredProperties;
       const visible = filtered.filter((p: any) =>
@@ -116,9 +155,6 @@ export const useMapStore = create<MapState>((set, get) => ({
       status,
       flexibleBudget,
     } = useFilterStore.getState();
-
-    const polygonPath = get().drawnPolygonPath;
-    const g = google.maps.geometry.poly;
 
     let final = mockProperties;
 
@@ -147,20 +183,6 @@ export const useMapStore = create<MapState>((set, get) => ({
       );
     }
 
-    // 3 — APPLY LOCATION FILTER (ONLY IF POLYGON EXISTS)
-    if (polygonPath.length > 0) {
-      const polygon = new google.maps.Polygon({ paths: polygonPath });
-
-      final = final.filter((p: any) =>
-        g.containsLocation(new google.maps.LatLng(p.lat, p.lng), polygon)
-      );
-
-      recommended = recommended.filter((p) =>
-        g.containsLocation(new google.maps.LatLng(p.lat, p.lng), polygon)
-      );
-    }
-
-    // 4 — FINAL STATE
     set({
       filteredProperties: final,
       visibleProperties: final,
